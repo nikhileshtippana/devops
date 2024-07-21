@@ -1,0 +1,35 @@
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        default: '21'
+        required: false
+        type: string
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          cache: 'maven'
+      - name: Build with Maven
+        run: mvn -f pom.xml test
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: ${{ inputs.java-version }}
+          cache: 'maven'
+      - name: Build with Maven
+        run: mvn -f pom.xml package
+  deploy:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start Application
+        run: java -jar target/*.jar

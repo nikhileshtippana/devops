@@ -1,5 +1,3 @@
-name: devops
-run-name: ${{ github.actor }} running on ${{ github.ref_name }} branch
 on:
   workflow_call:
     inputs:
