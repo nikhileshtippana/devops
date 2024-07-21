@@ -1,0 +1,23 @@
+name: devops
+run-name: ${{ github.actor }} running on ${{ github.ref_name }} branch
+on:
+  workflow_call:
+    inputs:
+      package-manager:
+        description: 'Package Manager (Example: npm , maven, gradle)'
+        required: false
+        type: string
+      java-version:
+        default: '17'
+        required: false
+        type: string
+jobs:
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g bats
+      - run: bats -v
